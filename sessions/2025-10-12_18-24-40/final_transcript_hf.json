@@ -1,0 +1,218 @@
+[
+  {
+    "speaker": "SPEAKER_00",
+    "start": 0.37,
+    "end": 15.22,
+    "text": "Star Wars fans would be familiar with the golden, life-sized hospitality robot C3PO, while Star Wars might be set in a galaxy far, far away. The reality of having machines talk and respond to us in a human-like manner is already a reality."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 15.37,
+    "end": 18.61,
+    "text": "which keeps getting more and more realistic with every passing day."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 19.13,
+    "end": 26.52,
+    "text": "The people you ask for queries on websites, your smart assistance, even calls made over the internet, all of them have one thing in common."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 26.71,
+    "end": 28.21,
+    "text": "None of them are actually human."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 28.87,
+    "end": 30.03,
+    "text": "Now, you must be thinking."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 30.39,
+    "end": 34.61,
+    "text": "If they are not human, how do they manage to sound and seem so human-like?"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 34.78,
+    "end": 38.74,
+    "text": "How do they respond to me so intelligently and how are they so articulate?"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 39.13,
+    "end": 42.69,
+    "text": "This, my friends, is the magic of natural language processing."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 43.35,
+    "end": 44.77,
+    "text": "What is an LP?"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 45.12,
+    "end": 55.4,
+    "text": "Natural language processing, or NLP, refers to the branch of artificial intelligence that gives the machines the ability to read, understand, and derive meaning from human languages."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 55.92,
+    "end": 67.6,
+    "text": "NLP combines the field of linguistics and computer science to decipher language structure and guidelines, and to make models which can comprehend, break down, and separate significant details from text and speech."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 68.1,
+    "end": 75.48,
+    "text": "Every day, humans interact with each other through public social media, transferring vast quantities of freely available data to each other."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 76.02,
+    "end": 81.0,
+    "text": "This data is extremely useful in understanding human behavior and customer habits."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 81.3,
+    "end": 88.41,
+    "text": "Data analysts and machine learning experts utilize this data to give machines the ability to mimic human linguistic behavior."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 88.98,
+    "end": 95.7,
+    "text": "This helps save millions in terms of manpower and time, as you don't need to always have a person present at the other end of a phone."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 96.08,
+    "end": 108.23,
+    "text": "NLP is also a lot more widespread than you may realize. You use it every day in seemingly normal and insignificant situations. Don't know how to correctly spell a word? Auto-correct has you covered."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 108.55,
+    "end": 125.99,
+    "text": "Need to see if your article or thesis will get flagged for copyright violations? That's okay. A plagiarism checker will search through the web and find any cases of published documents which may match your work lined by line. While NLP seems really cool, yet a cutting edge and complicated technology concept."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 126.36,
+    "end": 138.2,
+    "text": "It is actually pretty easy to learn. You start off with a document or an article. To make your algorithm understand what is going on in it, you need to process it into a form which is easily comprehensible by the machine."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 138.93,
+    "end": 142.35,
+    "text": "This is no different than making a child learn to read for the first time."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 143.97,
+    "end": 150.37,
+    "text": "You start off by performing segmentation, which is to break the entire document down into its constituent sentences."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 150.83,
+    "end": 155.96,
+    "text": "You can do this by segmenting the article along its punctuations like full stops and comments."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 156.11,
+    "end": 167.19,
+    "text": "For the algorithm to understand these sentences, we get the words in a sentence, and to explain them individually to our algorithm. So, we break down our sentence into its constituent words and store them."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 167.35,
+    "end": 170.99,
+    "text": "This is called tokenizing, where each word is called a token."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 171.45,
+    "end": 209.42,
+    "text": "We can make the learning process faster by getting rid of non-essential words which do not add much meaning to our statement, and are just there to make our statement sound more cohesive. These words, such as R and the, are called stop words. Now that we have the basic form of our document, we need to explain it to our machine. We first start off by explaining that some words like skipping, skips, skipped are the same word with added prefixes and suffixes. This is called stemming. We also identify the base words for different word tense, mood, gender, etc. This is called limitization, stemming from the base word lemma."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 209.55,
+    "end": 230.1,
+    "text": "Now we explain the concept of nouns, verbs, articles, and other parts of speech to the machine by adding these tags to our words. This is called part of speech tagging. Next, we introduce our machine to pop culture references and everyday names by flagging names of movies, important personalities or locations, etc. that may occur in the document."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 230.61,
+    "end": 232.69,
+    "text": "This is called Named Entity Tagging."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 233.02,
+    "end": 247.35,
+    "text": "Once we have our base awards and tags, we use a machine learning algorithm, like NaiveBase, to teach our model humans, sentiment, and speech. At the end of the day, most of the techniques used in NLP are simple grammar techniques that we have been taught in school."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 247.92,
+    "end": 254.91,
+    "text": "Here is a question for you. Which of these NLP techniques is used to obtain words from sentences? A. Stemming."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 255.01,
+    "end": 256.83,
+    "text": "B, tokenization."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 257.29,
+    "end": 258.94,
+    "text": "See, Limitization."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 259.42,
+    "end": 261.02,
+    "text": "D, segmentation."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 261.68,
+    "end": 267.92,
+    "text": "Give it a thought and leave your answers in the comment section below. Three lucky winners will receive Amazon gift vouchers."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 268.43,
+    "end": 277.12,
+    "text": "With the increasing demand for automated language solutions, companies are looking for NLP experts to join them and are prepared to offer highly lucrative salaries as well."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 277.68,
+    "end": 298.18,
+    "text": "If you want to learn more about NLP, you can check out Simply Learn's post-graduate program in AI and machine learning, in collaboration with IBM. In this program, you will learn about frameworks like Keras and TensorFlow, and get hands-on experience in deep learning to become a truly experienced AI engineer. That brings us to the end of this video on NLP."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 298.67,
+    "end": 302.99,
+    "text": "We hope you enjoyed this video. If you did, a thumbs up would be really appreciated."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 303.44,
+    "end": 313.48,
+    "text": "Here's your reminder to subscribe to our channel and to click on the bell icon for more on the latest technologies and trends. Thank you for watching and stay tuned for more from SimpliLearn."
+  }
+]

@@ -1,0 +1,326 @@
+[
+  {
+    "speaker": "SPEAKER_00",
+    "start": 0.03,
+    "end": 0.05,
+    "text": "Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. Thank you very much. I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry, I'm sorry,"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 0.45,
+    "end": 20.48,
+    "text": "What is natural language processing? Well, you're doing it right now. You're listening to the words and the sentences that I'm forming and you are forming some sort of comprehension from it. And when we ask a computer to do that, that is NLP or natural language processing."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 21.45,
+    "end": 36.9,
+    "text": "My name is Martin Keen, I'm a master inventor at IBM, and I've utilized NLP in a good number of my invention disclosures. NLP really has a really high utility value in all sorts of AI applications."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 37.73,
+    "end": 52.06,
+    "text": "Now, NLP starts with something called unstructured text. What is that? Well, that's just what you and I say. That's how we speak. So, for example, some unstructured text is add eggs."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 53.24,
+    "end": 54.05,
+    "text": "and milk."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 55.9,
+    "end": 57.1,
+    "text": "to my shopping list."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 59.21,
+    "end": 61.34,
+    "text": "Now, you and I understand."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 61.84,
+    "end": 62.74,
+    "text": "Exactly."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 63.72,
+    "end": 67.87,
+    "text": "What that means, but it is unstructured at least to a computer."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 71.92,
+    "end": 84.44,
+    "text": "So what we need to do is to have a structured representation of that same information that a computer can process. Now that might look something a bit more like this, where we have a shopping list element."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 86.73,
+    "end": 91.44,
+    "text": "and then it has sub elements within it like an item for eggs."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 94.19,
+    "end": 97.59,
+    "text": "and an item for milk."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 103.29,
+    "end": 106.02,
+    "text": "That is an example of something that is structured."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 110.14,
+    "end": 117.45,
+    "text": "Now, the job of natural language processing is to translate between these two things. So NLP."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 117.68,
+    "end": 119.49,
+    "text": "sits right in."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 120.06,
+    "end": 149.31,
+    "text": "middle here, translating between unstructured and structured data. And when we go from unstructured here to structured this way, that's called N-L-U or natural language understanding. And when we go this way, from structured to unstructured, that's called natural language generation or N-L-G. We're going to focus today primarily on going from unstructured to structured in natural language processing."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 149.81,
+    "end": 154.67,
+    "text": "Now let's think of some use cases where NLP might be quite handy."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 155.55,
+    "end": 156.36,
+    "text": "first of all."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 157.04,
+    "end": 158.52,
+    "text": "We've got machine."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 158.74,
+    "end": 159.87,
+    "text": "Translation."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 161.95,
+    "end": 162.28,
+    "text": "Now."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 164.21,
+    "end": 218.26,
+    "text": "When we translate from one language to another, we need to understand the context of that sentence. It's not just the case of taking each individual word from, say, English and translating it into another language. We need to understand the overall structure and context of what's being said. And my favourite example of this going horribly wrong is if you take the phrase, the spirit is willing, but the flesh is weak, and you translate that from English to Russian, and then you translate that Russian translation back into English, you're going to go from the spirit is willing, but the flesh is weak, to something a bit more like the vodka is good, but the meat is rotten, which is really not the intended context of that sentence whatsoever. So NLP can help with situations like that."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 218.41,
+    "end": 253.44,
+    "text": "Now, the second kind of use case that I like to mention relates to virtual assistance and also to things like chatbots. Now, a virtual assistant, that's something like Siri or Alexa on your phone that is taking human utterances and deriving a command to execute based upon that. And a chatbot is something similar except in written language and that's taking written language and then using it to traverse a decision tree in order to take an action. NLP is very helpful there."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 254.78,
+    "end": 258.98,
+    "text": "Another use case is for sentiment analysis."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 260.77,
+    "end": 270.94,
+    "text": "This is taking some text, perhaps an email message or a product review and trying to derive the sentiment that it's expressed within it."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 271.53,
+    "end": 284.9,
+    "text": "For example, is this product review a positive sentiment or a negative sentiment? Is it written as a serious statement or is it being sarcastic? We can use NLP to tell us."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 285.64,
+    "end": 287.16,
+    "text": "And then finally..."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 287.67,
+    "end": 312.12,
+    "text": "Another good example is spam detection, so this is a case of looking at a given email message and trying to drive. Is this a really email message or is it spam? And we can look for pointers within the content of the message. So things like overused words or poor grammar or an inappropriate claim of urgency can all indicate that this is actually perhaps spam."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 313.01,
+    "end": 323.58,
+    "text": "So those are some of the things that NLP can provide, but how does it work? Well, the thing with NLP is it's not like one algorithm."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 323.69,
+    "end": 332.03,
+    "text": "It's actually more like a bag of tools and you can apply these bag of tools to be able to resolve some of these use cases."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 332.3,
+    "end": 347.71,
+    "text": "Now the input to NLP is some unstructured text, so either some written text or spoken text that has been converted to a written text through a speech-to-text algorithm. Once we've got that, the first stage"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 349.36,
+    "end": 351.79,
+    "text": "of NLP is called tokenization."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 355.03,
+    "end": 377.85,
+    "text": "This is about taking a string and breaking it down into chunks. So if we consider the unstructured text we've got here, add eggs and milk to my shopping list. That's eight words, that can be eight tokens. And from here on in, we are going to work one token at a time as we traverse through this."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 378.77,
+    "end": 384.98,
+    "text": "Now the first stage, once we've got things down into tokens that we can perform, is called Stemming."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 387.51,
+    "end": 405.32,
+    "text": "And this is all about deriving the word stem for a given token. So for example, running runs and ran, the word stem for all three of those is run. We're just kind of removing the prefix and the suffixes and normalizing the tense and we're getting to the word stem."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 406.26,
+    "end": 414.19,
+    "text": "but stemming doesn't work well for every token. For example, universal and university,"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 414.43,
+    "end": 422.18,
+    "text": "Well, they don't really stem down to universe. For situations like that, there is another tool that we have available."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 422.43,
+    "end": 423.73,
+    "text": "And that is called"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 424.81,
+    "end": 426.53,
+    "text": "Lematization."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 428.44,
+    "end": 439.89,
+    "text": "and limitization takes a given token and learns its meaning through a dictionary definition and from there it can derive its root or its LEM."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 440.4,
+    "end": 449.65,
+    "text": "take better, for example, better is derived from good, so the root or the lamb of better is good. The"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 449.87,
+    "end": 461.39,
+    "text": "stem of better would be bad. So you can see that it is significant whether we use stemming or we use limitization for a given token."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 463.06,
+    "end": 465.87,
+    "text": "Now next thing we can do is we can do."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 466.2,
+    "end": 469.44,
+    "text": "a process called part of speech tagging."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 471.55,
+    "end": 479.65,
+    "text": "And what this is doing is for a given token, it's looking where that token is used within the context of a sentence."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 480.97,
+    "end": 502.06,
+    "text": "So take the word make, for example. If I say I'm going to make dinner, make is a verb. But if I ask you what make is your laptop, well, make is now now. So where that token is used in a sentence matters. Part of speech tagging can help us derive that context."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 502.48,
+    "end": 506.37,
+    "text": "And then finally another stage is named."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 506.84,
+    "end": 508.78,
+    "text": "and the recognition."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 510.16,
+    "end": 527.41,
+    "text": "And what this is asking is, for a given token, is there an entity associated with it? So, for example, a token of Arizona has an entity of a US state, whereas a token of Ralph has an entity of a person's name."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 527.78,
+    "end": 541.26,
+    "text": "And these are some of the tools that we can apply in this big bag of tools that we have for NLP in order to get from this unstructured human speech through to something structured that a computer can understand."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 541.4,
+    "end": 560.23,
+    "text": "And once we've done that, then we can apply that structured data to all sorts of AI applications. Now, there's obviously a lot more to it than this, and I've included some links in the description if you'd like to know more. But hopefully this made some sense and that you were able to"
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 560.6,
+    "end": 565.16,
+    "text": "process some of the natural language that I share today."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 566.09,
+    "end": 566.95,
+    "text": "Thanks for watching."
+  },
+  {
+    "speaker": "SPEAKER_00",
+    "start": 568.79,
+    "end": 575.96,
+    "text": "If you have questions, please drop us a line below and if you want to see more videos like this in the future, please like and subscribe."
+  }
+]
