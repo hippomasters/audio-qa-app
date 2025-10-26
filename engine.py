@@ -11,7 +11,8 @@ import ffmpeg
 import uuid
 import ollama
 import streamlit as st
-
+import torch
+import gc
 # --- Engine Configuration ---
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 WHISPER_MODEL_ID = "openai/whisper-base"
@@ -26,7 +27,7 @@ MAX_PAUSE_S = 2.0
 
 # --- Cached Model Loaders ---
 
-@st.cache_resource
+
 def load_diarization_pipeline():
     print("Cache Miss: Loading diarization pipeline for the first time.")
     try:
@@ -47,12 +48,12 @@ def load_diarization_pipeline():
         st.error(f"Failed to load diarization pipeline: {e}")
         return None # Return None on failure
 
-@st.cache_resource
+
 def load_whisper_pipeline():
     print("Cache Miss: Loading Whisper pipeline for the first time.")
     return pipeline("automatic-speech-recognition", model=WHISPER_MODEL_ID, device=DEVICE)
 
-@st.cache_resource
+
 def load_embedding_model():
     print("Cache Miss: Loading embedding model for the first time.")
     return SentenceTransformer(EMBEDDING_MODEL, device=DEVICE)
@@ -104,11 +105,11 @@ def _clean_timeline(timeline: list):
     cleaned_timeline.append(current_chunk)
     return cleaned_timeline
 
-def run_diarization(audio_path: str):
+def run_diarization(audio_path: str, pipeline):
     """
     Runs speaker diarization on an audio file and returns the timeline data.
     """
-    pipeline = load_diarization_pipeline()
+
     print(f"▶️  Engine: Analyzing '{os.path.basename(audio_path)}' for speakers...")
     try:
         diarization = pipeline(audio_path)
@@ -119,11 +120,11 @@ def run_diarization(audio_path: str):
         print(f"❌ Engine Error: Diarization failed for {audio_path}. {e}")
         return None
 
-def run_transcription(audio_path: str, cleaned_timeline: list, session_folder: str, source_filename: str):
+def run_transcription(audio_path: str, cleaned_timeline: list, session_folder: str, source_filename: str, transcribe_pipeline):
     """
     Transcribes audio segments by grouping them into larger chunks first.
     """
-    transcribe_pipeline = load_whisper_pipeline()
+    #transcribe_pipeline = load_whisper_pipeline()
     print(f"▶️  Engine: Loading and resampling audio file: '{os.path.basename(audio_path)}'")
     try:
         waveform, sample_rate = torchaudio.load(audio_path)
@@ -161,6 +162,16 @@ def run_transcription(audio_path: str, cleaned_timeline: list, session_folder: s
                 "text": result["text"].strip(),
                 "source_file": source_filename
             })
+    # --- ADDED BACK: Save the final transcript to a file ---
+        output_path = os.path.join(session_folder, "final_transcript_hf.json")
+        try:
+            with open(output_path, "w") as f:
+                json.dump(full_transcript, f, indent=2)
+            print(f"✅ Engine: Transcription complete. Saved to '{output_path}'")
+        except Exception as e:
+            print(f"❌ Engine Error: Failed to save final transcript to {output_path}. Error: {e}")
+            # Optionally return None here if saving is critical,
+            # but returning the data might still be useful.
     return full_transcript
 
 def _determine_primary_speaker(chunk_buffer):
@@ -187,7 +198,11 @@ def run_indexing(all_segments: list, session_folder: str):
     """
     Chunks a transcript, creates embeddings, and stores them in a session-specific ChromaDB.
     """
+    print(f"▶️  Engine: Loading embedding model for indexing...")
     model = load_embedding_model()
+    if not model:
+        print(f"❌ Engine Error: Could not load embedding model for indexing.")
+        return False
     db_path = os.path.join(session_folder, "chroma_db")
     client = chromadb.PersistentClient(path=db_path)
     collection = client.get_or_create_collection(name="audio_transcript")
@@ -224,6 +239,11 @@ def run_indexing(all_segments: list, session_folder: str):
     print(f"✅ Engine: Merged all segments into {len(all_merged_chunks)} coherent chunks.")
     if not all_merged_chunks:
         print("No chunks to index.")
+        # --- ADD cleanup before returning ---
+        print(f"▶️  Engine: Unloading embedding model after indexing...")
+        del model
+        gc.collect()
+        if DEVICE == "cuda": torch.cuda.empty_cache()
         return True
 
     ids = [str(uuid.uuid4()) for _ in all_merged_chunks]
@@ -237,60 +257,111 @@ def run_indexing(all_segments: list, session_folder: str):
 
 def process_session_pipeline(list_of_file_paths: list, session_folder: str):
     """
-    The main processing pipeline that runs all steps and yields progress updates.
+    Main pipeline: Loads, uses, and unloads models sequentially.
     """
     all_transcribed_segments = []
     total_files = len(list_of_file_paths)
-    for i, file_path in enumerate(list_of_file_paths):
-        original_filename = os.path.basename(file_path)
-        yield f"({i+1}/{total_files}) Processing '{original_filename}'..."
-        yield f"  - Preparing audio..."
-        audio_path = prepare_audio_from_upload(file_path, session_folder)
-        if not audio_path:
-            yield f"ERROR: Failed to prepare audio for '{original_filename}'."
-            continue
+    diarization_pipeline = None # Initialize variables
+    whisper_pipeline = None
 
-        yield f"  - Identifying speakers..."
-        raw_timeline = run_diarization(audio_path)
-        if not raw_timeline:
-            yield f"ERROR: Diarization failed for '{original_filename}'."
-            continue
+    try: # Use a try/finally block to ensure cleanup happens
+        for i, file_path in enumerate(list_of_file_paths):
+            original_filename = os.path.basename(file_path)
+            yield f"({i+1}/{total_files}) Processing '{original_filename}'..."
 
-        yield f"  - Cleaning up timeline..."
-        cleaned_timeline = _clean_timeline(raw_timeline)
+            # --- Step 1: Prepare Audio ---
+            yield f"  - Preparing audio..."
+            audio_path = prepare_audio_from_upload(file_path, session_folder)
+            if not audio_path:
+                yield f"ERROR: Failed to prepare audio for '{original_filename}'."
+                continue
 
-        yield f"  - Transcribing audio..."
-        transcribed_segments = run_transcription(audio_path, cleaned_timeline, session_folder, original_filename)
-        # --- ADDED: Clean up extracted audio file ---
-        if audio_path != file_path: # Check if a temporary file was created
-            try:
-                os.remove(audio_path)
-                print(f"✅ Engine: Cleaned up temporary audio file: {os.path.basename(audio_path)}")
-            except OSError as e:
-                print(f"⚠️ Engine Warning: Could not delete temporary audio file {audio_path}. Error: {e}")
-        # --------------------------------------------
-        if not transcribed_segments:
-            yield f"ERROR: Transcription failed for '{original_filename}'."
-            continue
-        all_transcribed_segments.extend(transcribed_segments)
+            # --- Step 2: Diarization ---
+            yield f"  - Loading Diarization Model..."
+            diarization_pipeline = load_diarization_pipeline() # Load
+            if not diarization_pipeline:
+                 yield f"ERROR: Failed to load diarization model for '{original_filename}'."
+                 continue
+            yield f"  - Identifying speakers..."
+            raw_timeline = run_diarization(audio_path, diarization_pipeline) # Use (pass model in)
+            if not raw_timeline:
+                yield f"ERROR: Diarization failed for '{original_filename}'."
+                continue
+            # --- Unload Diarization ---
+            yield f"  - Unloading Diarization Model..."
+            del diarization_pipeline
+            gc.collect()
+            if DEVICE == "cuda": torch.cuda.empty_cache()
+            diarization_pipeline = None # Reset variable
 
-    if all_transcribed_segments:
-        yield f"Indexing all transcripts for Q&A..."
-        success = run_indexing(all_transcribed_segments, session_folder)
-        if not success:
-            yield "ERROR: Indexing failed."
-            return
+            # --- Step 3: Clean Timeline ---
+            yield f"  - Cleaning up timeline..."
+            cleaned_timeline = _clean_timeline(raw_timeline)
+
+            # --- Step 4: Transcription ---
+            yield f"  - Loading Transcription Model..."
+            whisper_pipeline = load_whisper_pipeline() # Load
+            if not whisper_pipeline:
+                 yield f"ERROR: Failed to load transcription model for '{original_filename}'."
+                 continue
+            yield f"  - Transcribing audio..."
+            transcribed_segments = run_transcription(audio_path, cleaned_timeline, session_folder, original_filename, whisper_pipeline) # Use (pass model in)
+            if not transcribed_segments:
+                yield f"ERROR: Transcription failed for '{original_filename}'."
+                continue
+            all_transcribed_segments.extend(transcribed_segments)
+            # --- Unload Transcription ---
+            yield f"  - Unloading Transcription Model..."
+            del whisper_pipeline
+            gc.collect()
+            if DEVICE == "cuda": torch.cuda.empty_cache()
+            whisper_pipeline = None # Reset variable
+
+            # --- Cleanup Temp Audio ---
+            if audio_path != file_path:
+                try: os.remove(audio_path)
+                except OSError: pass
+
+        # --- Step 5: Indexing ---
+        if all_transcribed_segments:
+            yield f"Indexing all transcripts for Q&A..."
+            success = run_indexing(all_transcribed_segments, session_folder) # Indexing handles its own model load/unload
+            if not success:
+                yield "ERROR: Indexing failed."
+                return
+        else:
+            yield "Warning: No files were successfully transcribed."
+        yield "✅ All files processed! You can now ask questions."
+
+    finally: # Ensure models are unloaded even if an error occurs mid-loop
+        if diarization_pipeline: del diarization_pipeline
+        if whisper_pipeline: del whisper_pipeline
+        gc.collect()
+        if DEVICE == "cuda": torch.cuda.empty_cache()
+
+
+
+
+def clear_gpu_cache():
+    """Forces PyTorch to release unused cached memory on the GPU."""
+    print("Engine: Clearing GPU Cache...")
+    gc.collect() # Trigger Python's garbage collection
+    if DEVICE == "cuda": # Ensure DEVICE is defined ('cuda' or 'cpu')
+        torch.cuda.empty_cache()
+        print("Engine: GPU Cache Cleared.")
     else:
-        yield "Warning: No files were successfully transcribed."
-    yield "✅ All files processed! You can now ask questions."
-
+        print("Engine: Not using CUDA, skipping cache clear.")
 # **CORRECTION:** Fixes the stray 'def' keyword for a valid syntax
 def ask_question(question: str, session_folder: str):
     """
     Answers a question based on the indexed transcript for a session.
     """
     print(f"▶️  Engine: Answering question: '{question}'")
+    print(f"▶️  Engine: Loading embedding model for Q&A...")
     embedding_model = load_embedding_model()
+    if not embedding_model:
+        yield "ERROR: Could not load embedding model to answer question."
+        return
     db_path = os.path.join(session_folder, "chroma_db")
     if not os.path.exists(db_path):
         yield "ERROR: The database for this session has not been indexed yet."
@@ -347,3 +418,10 @@ def ask_question(question: str, session_folder: str):
         sorted_sources = sorted(list(cited_sources), key=lambda x: x[2])
         for speaker, source, start, end in sorted_sources:
             yield f"- *{speaker} from **{source}**: {start:.2f}s to {end:.2f}s*\n"
+    # --- ADD cleanup before function ends ---
+    print(f"▶️  Engine: Unloading embedding model after Q&A...")
+    del embedding_model
+    gc.collect()
+    if DEVICE == "cuda": torch.cuda.empty_cache()
+    # -----------------------------------------
+    # (The function implicitly ends here)
