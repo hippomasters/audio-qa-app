@@ -4,9 +4,7 @@ from datetime import datetime
 import engine
 import ollama
 
-
 # --- Page Configuration ---
-# This must be the first Streamlit command.
 st.set_page_config(
     page_title="Audio QA App",
     page_icon="🎙️",
@@ -14,92 +12,114 @@ st.set_page_config(
 )
 
 # --- Session State Initialization ---
-# This comes AFTER the page config.
 if "messages" not in st.session_state:
     st.session_state.messages = []
+if "processed_files" not in st.session_state:
+    st.session_state.processed_files = []
+if "processing_complete" not in st.session_state:
+    st.session_state.processing_complete = False
 
 # --- App Title ---
 st.title("🎙️ Audio Question-Answering App")
 st.markdown("Upload an audio or video file, and I'll create a searchable knowledge base for you to ask questions.")
 
-# --- File Uploader ---
-st.header("1. Upload Your Audio or Video File")
+# --- Input Section ---
+st.header("1. Provide Your Audio or Video File")
 
-uploaded_file = st.file_uploader(
-    "Choose a file (.mp3, .wav, .mp4, .mov...)",
-    type=['mp3', 'wav', 'm4a', 'mp4', 'mov', 'avi', 'mkv']
+uploaded_files = st.file_uploader(
+    "Choose files (.mp3, .wav, .mp4, etc.)",
+    type=['mp3', 'wav', 'm4a', 'mp4', 'mov', 'avi', 'mkv'],
+    accept_multiple_files=True
 )
 
-# --- Process Button and Logic ---
-st.header("2. Process and Ask Questions")
+# --- File Processing Logic ---
+if uploaded_files:
+    new_files_to_process = [f for f in uploaded_files if f.name not in st.session_state.processed_files]
+    if new_files_to_process:
+        if st.button(f"Process {len(new_files_to_process)} New File(s)", key="process_upload_button"):
+            if "session_folder" not in st.session_state or st.session_state.session_folder is None:
+                session_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+                st.session_state.session_folder = os.path.join("sessions", session_id)
+                os.makedirs(st.session_state.session_folder, exist_ok=True)
 
-# This logic handles saving the file immediately upon upload
-# and storing its path in the session state (the app's memory).
-if uploaded_file is not None:
-    # Check if this is a new file upload
-    if 'current_file' not in st.session_state or st.session_state.current_file != uploaded_file.name:
-        # Create a unique session folder as soon as a new file is uploaded
-        session_id = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        session_folder = os.path.join("sessions", session_id)
-        os.makedirs(session_folder, exist_ok=True)
+            file_paths_to_process = []
+            for new_file in new_files_to_process:
+                path = os.path.join(st.session_state.session_folder, new_file.name)
+                with open(path, "wb") as f:
+                    f.write(new_file.getbuffer())
+                file_paths_to_process.append(path)
+                st.session_state.processed_files.append(new_file.name)
 
-        # Save the uploaded file immediately
-        file_path = os.path.join(session_folder, uploaded_file.name)
-        with open(file_path, "wb") as f:
-            f.write(uploaded_file.getbuffer())
+            # **CORRECTION 1: Track success/failure of file processing**
+            success_count = 0
+            fail_count = 0
+            failed_files = []
 
-        # Store the new file info in the app's memory
-        st.session_state['processed_file_path'] = file_path
-        st.session_state['session_folder'] = session_folder
-        st.session_state['current_file'] = uploaded_file.name
+            progress_bar = st.empty()
+            with st.spinner("Processing files... This may take a few minutes."):
+                for status in engine.process_session_pipeline(file_paths_to_process, st.session_state.session_folder):
+                    progress_bar.text(status)
+                    if "ERROR:" in status:
+                        fail_count += 1
+                        try:
+                            failed_file = status.split("'")[1]
+                            failed_files.append(failed_file)
+                        except IndexError:
+                            pass
 
-        st.info(f"File ready for processing: `{uploaded_file.name}`")
+            # **CORRECTION 1 (cont.): Provide accurate feedback to the user**
+            total_processed = len(file_paths_to_process)
+            success_count = total_processed - fail_count
+            if fail_count == 0 and success_count > 0:
+                st.success(f"Successfully processed {success_count} file(s)!")
+                st.session_state.processing_complete = True
+            elif success_count > 0 and fail_count > 0:
+                st.warning(f"Processed {success_count} file(s), but failed to process {fail_count} file(s): {', '.join(failed_files)}")
+                st.session_state.processing_complete = True
+            elif fail_count > 0 and success_count == 0:
+                st.error(f"Failed to process all {fail_count} file(s): {', '.join(failed_files)}")
+                st.session_state.processing_complete = False
 
-# This "Process" button logic is now separate and relies on the session state.
-if st.button("Process Audio/Video"):
-    # Check the session state to make sure a file has been uploaded and saved
-    if 'processed_file_path' in st.session_state:
-        file_to_process = st.session_state['processed_file_path']
-        folder_to_process = st.session_state['session_folder']
+# --- Chat Interface (Only shows after processing is complete) ---
+if st.session_state.get('processing_complete', False):
+    st.header("2. Chat with Your Audio")
 
-        st.info(f"Starting processing for: {os.path.basename(file_to_process)}")
+    for message in st.session_state.messages:
+        with st.chat_message(message["role"]):
+            st.markdown(message["content"])
 
-        # Call the engine and display real-time progress
-        progress_bar = st.empty()
-        with st.spinner("Processing in progress... This may take a few minutes."):
-            for status in engine.process_session_pipeline(file_to_process, folder_to_process):
-                progress_bar.text(status)
+    if prompt := st.chat_input("Ask a question about your audio..."):
+        st.session_state.messages.append({"role": "user", "content": prompt})
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-        st.success("Processing complete!")
-    else:
-        st.error("Please upload a file first before processing.")
-# --- Chat Interface ---
-st.header("3. Chat with Your Audio")
+        if 'session_folder' in st.session_state:
+            session_folder = st.session_state['session_folder']
+            with st.chat_message("assistant"):
+                # **CORRECTION 2: Manually handle streaming to separate answer from sources**
+                response_placeholder = st.empty()
+                sources_placeholder = st.empty()
 
-# Display chat messages from history
-for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+                full_response = ""
+                sources_text = ""
+                is_sources_section = False
 
-# Accept user input
-if prompt := st.chat_input("Ask a question about your audio..."):
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": prompt})
-    # Display user message
-    with st.chat_message("user"):
-        st.markdown(prompt)
+                for chunk in engine.ask_question(prompt, session_folder):
+                    if chunk == "\n\n**Sources:**\n":
+                        is_sources_section = True
+                        sources_text += chunk
+                        continue
 
-    # Get the current session folder from the app's memory
-    if 'session_folder' in st.session_state:
-        session_folder = st.session_state['session_folder']
+                    if not is_sources_section:
+                        full_response += chunk
+                        response_placeholder.markdown(full_response + "▌")
+                    else:
+                        sources_text += chunk
+                        sources_placeholder.markdown(sources_text)
 
-        # Display assistant response
-        with st.chat_message("assistant"):
-            # Use st.write_stream to display the streamed response from the engine
-            response_stream = engine.ask_question(prompt, session_folder)
-            full_response = st.write_stream(response_stream)
+                response_placeholder.markdown(full_response) # Final response without cursor
 
-        # Add the complete assistant response to chat history
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-    else:
-        st.error("It seems the session was lost. Please upload your file again.")
+            # **CORRECTION 2 (cont.): Save only the LLM's answer to history**
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+        else:
+            st.error("It seems the session was lost. Please upload your file again.")

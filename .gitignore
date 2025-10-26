@@ -4,3 +4,4 @@ chroma_db/
 sessions/
 sessions/
 sessions/
+.streamlit/secrets.toml
