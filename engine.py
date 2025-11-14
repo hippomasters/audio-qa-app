@@ -375,7 +375,7 @@ def ask_question(question: str, session_folder: str):
         n_results=3,
         include=['metadatas', 'documents', 'distances']
     )
-    if not results['documents'] or results['distances'][0][0] > 0.6:
+    if not results['documents'] or results['distances'][0][0] > 1:
         yield "I could not find a relevant answer in the provided transcript to answer that question."
         return
 
